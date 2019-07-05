@@ -1,0 +1,120 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"net/http"
+	"strings"
+	"time"
+  "log"
+	"os"
+	"io/ioutil"
+)
+
+func parse(url string, chFailedUrls chan string, chIsFinished chan bool) {
+  response, err := http.Get(url)
+  if err != nil {
+    log.Fatal(err)
+  }
+  body := response.Body
+  defer body.Close()
+
+  bytes, err := ioutil.ReadAll(body)
+  data := string(bytes)
+
+	scanner := bufio.NewScanner(strings.NewReader(data))
+	itemDef := new(ItemDef)
+	for scanner.Scan() {
+
+		switch line := scanner.Text(); {
+
+		case strings.Contains(line, "|name ="):
+			itemDef.Name = parseStringOf(line, "name")
+			break
+
+		case strings.Contains(line, "|members ="):
+			itemDef.Members = parseBooleanOf(line, "members")
+			break
+
+		case strings.Contains(line, "|quest ="):
+			itemDef.QuestItem = parseBooleanOf(line, "quest")
+			break
+
+		case strings.Contains(line, "|tradeable ="):
+			itemDef.Tradeable = parseBooleanOf(line, "tradeable")
+			break
+
+		case strings.Contains(line, "|equipable ="):
+			itemDef.Equipable = parseBooleanOf(line, "equipable")
+			break;
+
+		case strings.Contains(line, "|stackable ="):
+			itemDef.Stackable = parseBooleanOf(line, "stackable")
+			break;
+
+		case strings.Contains(line, "|noteable ="):
+			itemDef.Noteable = parseBooleanOf(line, "noteable")
+			break;
+
+		case strings.Contains(line, "|examine ="):
+			itemDef.Examine = parseStringOf(line, "examine")
+			break;
+
+		}
+
+	}
+
+	file, err := os.OpenFile("item_defs.json", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+	    panic(err)
+	}
+	defer file.Close()
+
+	fmt.Fprintf(file, "%s", itemDef.ToJson())
+
+	chIsFinished <- true
+}
+
+func main() {
+	start := time.Now()
+	// Create a random urls list just as an example:
+	urls := [10]string{
+		"https://oldschool.runescape.wiki/w/Abyssal_whip?action=raw",
+		"https://oldschool.runescape.wiki/w/Adamant_longsword?action=raw",
+		"https://oldschool.runescape.wiki/w/Abyssal_dagger?action=raw",
+		"https://oldschool.runescape.wiki/w/Ancient_staff?action=raw",
+		"https://oldschool.runescape.wiki/w/Abyssal_bludgeon?action=raw",
+		"https://oldschool.runescape.wiki/w/3rd_age_wand?action=raw",
+		"https://oldschool.runescape.wiki/w/3rd_age_plateskirt?action=raw",
+		"https://oldschool.runescape.wiki/w/Air_rune?action=raw",
+		"https://oldschool.runescape.wiki/w/Ahrim%27s_staff?action=raw",
+		"https://oldschool.runescape.wiki/w/Adamant_scimitar?action=raw",
+	}
+
+	// Create 2 channels, 1 to track urls we could not open
+	// and 1 to inform url fetching is done:
+	chFailedUrls := make(chan string)
+	chIsFinished := make(chan bool)
+
+	// Open all urls concurrently using the 'go' keyword:
+	for _, url := range urls {
+		go parse(url, chFailedUrls, chIsFinished)
+	}
+
+	// Receive messages from every concurrent goroutine. If
+	// an url fails, we log it to failedUrls array:
+	failedUrls := make([]string, 0)
+	for i := 0; i < len(urls); {
+		select {
+		case url := <-chFailedUrls:
+			failedUrls = append(failedUrls, url)
+		case <-chIsFinished:
+			i++
+		}
+	}
+
+	// Print all urls we could not open:
+	fmt.Println("Could not fetch these urls: ", failedUrls)
+	fmt.Println("Duration: ", time.Since(start))
+
+}

@@ -1,0 +1,91 @@
+{
+    "name": "3rd age wand",
+    "members": true,
+    "questItem": false,
+    "tradeable": true,
+    "equipable": true,
+    "stackable": false,
+    "noteable": true,
+    "examine": "A beautifully crafted wand infused by ancient wizards."
+}{
+    "name": "",
+    "members": true,
+    "questItem": false,
+    "tradeable": true,
+    "equipable": true,
+    "stackable": false,
+    "noteable": true,
+    "examine": ""
+}{
+    "name": "Ancient staff",
+    "members": true,
+    "questItem": false,
+    "tradeable": true,
+    "equipable": true,
+    "stackable": false,
+    "noteable": true,
+    "examine": "A magical staff of ancient origin..."
+}{
+    "name": "3rd age plateskirt",
+    "members": true,
+    "questItem": false,
+    "tradeable": true,
+    "equipable": true,
+    "stackable": false,
+    "noteable": true,
+    "examine": "Fabulously ancient armour beaten from magical silver."
+}{
+    "name": "Adamant scimitar",
+    "members": false,
+    "questItem": false,
+    "tradeable": true,
+    "equipable": true,
+    "stackable": false,
+    "noteable": true,
+    "examine": "A vicious, curved sword."
+}{
+    "name": "",
+    "members": false,
+    "questItem": false,
+    "tradeable": false,
+    "equipable": false,
+    "stackable": true,
+    "noteable": false,
+    "examine": ""
+}{
+    "name": "Abyssal bludgeon",
+    "members": true,
+    "questItem": false,
+    "tradeable": true,
+    "equipable": true,
+    "stackable": false,
+    "noteable": true,
+    "examine": "Elements of deceased Abyssal Sires have been fused together."
+}{
+    "name": "",
+    "members": true,
+    "questItem": false,
+    "tradeable": false,
+    "equipable": true,
+    "stackable": false,
+    "noteable": false,
+    "examine": "Ahrim the Blighted's quarterstaff."
+}{
+    "name": "Abyssal whip",
+    "members": true,
+    "questItem": false,
+    "tradeable": true,
+    "equipable": true,
+    "stackable": false,
+    "noteable": true,
+    "examine": "A weapon from the abyss."
+}{
+    "name": "Adamant longsword",
+    "members": false,
+    "questItem": false,
+    "tradeable": true,
+    "equipable": true,
+    "stackable": false,
+    "noteable": true,
+    "examine": "A razor sharp longsword."
+}

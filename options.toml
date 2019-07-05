@@ -1,0 +1,5 @@
+[item_def_options]
+parse_items = true
+
+[npc_def_options]
+parse_npcs = false
