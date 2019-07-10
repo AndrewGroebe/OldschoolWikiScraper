@@ -77,7 +77,7 @@ func parse(url string, chFailedUrls chan string, chIsFinished chan bool) {
 
 func main() {
 	start := time.Now()
-	// Create a random urls list just as an example:
+
 	urls := [10]string{
 		"https://oldschool.runescape.wiki/w/Abyssal_whip?action=raw",
 		"https://oldschool.runescape.wiki/w/Adamant_longsword?action=raw",
@@ -91,18 +91,14 @@ func main() {
 		"https://oldschool.runescape.wiki/w/Adamant_scimitar?action=raw",
 	}
 
-	// Create 2 channels, 1 to track urls we could not open
-	// and 1 to inform url fetching is done:
 	chFailedUrls := make(chan string)
 	chIsFinished := make(chan bool)
 
-	// Open all urls concurrently using the 'go' keyword:
+	/* Concurrently parse each url */
 	for _, url := range urls {
 		go parse(url, chFailedUrls, chIsFinished)
 	}
 
-	// Receive messages from every concurrent goroutine. If
-	// an url fails, we log it to failedUrls array:
 	failedUrls := make([]string, 0)
 	for i := 0; i < len(urls); {
 		select {
@@ -112,8 +108,6 @@ func main() {
 			i++
 		}
 	}
-
-	// Print all urls we could not open:
 	fmt.Println("Could not fetch these urls: ", failedUrls)
 	fmt.Println("Duration: ", time.Since(start))
 
